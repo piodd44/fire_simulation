@@ -26,8 +26,10 @@ class LogicPainterConnector:
         painter = self.painter
         sim_logic = self.sim_logic
         game_map = sim_logic.sim_map
-        for x, line in enumerate(game_map):
-            for y, value in enumerate(line):
+        min_x, max_x, min_y, max_y = self.calculate_field_of_view(sim_map=game_map)
+        for x in range(min_x, max_x):
+            for y in range(min_y, max_y):
+                value = game_map[x][y]
                 pos_vector = [x * box_size - self.camera.pos_x, y * box_size - self.camera.pos_y]
                 if value == 0:
                     painter.draw_rect(pos_vector=pos_vector, color=GREEN,
@@ -38,6 +40,14 @@ class LogicPainterConnector:
                 if value == 2:
                     painter.draw_rect(pos_vector=pos_vector, color=BLUE,
                                       size=(box_size - line_width, box_size - line_width))
+
+    def calculate_field_of_view(self, sim_map):
+        field_of_view = 1200
+        min_x = max((self.camera.pos_x - field_of_view) // self.box_size, 0)
+        max_x = min((self.camera.pos_x + field_of_view) // self.box_size, len(sim_map))
+        min_y = max((self.camera.pos_y - field_of_view) // self.box_size, 0)
+        max_y = min((self.camera.pos_y + field_of_view) // self.box_size, len(sim_map[0]))
+        return min_x, max_x, min_y, max_y
 
     def input_mouse_input(self, mouse_input: [bool], mouse_pos: [float]):
         # print(mouse_input)
@@ -55,3 +65,6 @@ class LogicPainterConnector:
             self.camera.pos_x -= 100
         elif input_key == "d":
             self.camera.pos_x += 100
+        print(self.camera.pos_x, self.camera.pos_y)
+        if input_key == "l":
+            self.sim_logic.save_map()

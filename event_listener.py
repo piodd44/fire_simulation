@@ -25,6 +25,7 @@ class EventListener:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 input_key_list.append(event.unicode)
+                print(event.unicode)
             if event.type == pygame.QUIT:
                 exit(11)
         return input_key_list
