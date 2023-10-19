@@ -50,16 +50,19 @@ while True:
     mouse_pos = event_listener.get_mouse_pos()
     # print(mouse_pos)
     get_presed = event_listener.get_mouse_pressed()
-    game_map = sim_logic.get_map()
+
     logic_painter_connector.input_mouse_input(mouse_input=get_presed, mouse_pos=mouse_pos)
     logic_painter_connector.draw_sim_map()
+
     inpute_list = event_listener.get_key_pressed()
+
+
 
     sim_logic.sim_iteration()
 
     for inpute_key in inpute_list:
-        print(inpute_key)
-        sim_logic.make_action(inpute_key)
+        logic_painter_connector.input_key(input_key=inpute_key)
+        #sim_logic.make_action(inpute_key)
     pygame.display.flip()  # Refresh on-screen display
 
     clock.tick(60)  # wait until next frame (at 60 FPS)
