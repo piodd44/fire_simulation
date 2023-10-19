@@ -1,6 +1,7 @@
 from sim_logic import SimLogic
 from painter import Painter
 import vector_calculator
+from vector3d import Vector3d
 
 GREEN = [0, 200, 0]
 BLUE = [0, 222, 222]
@@ -15,13 +16,13 @@ class Camera:
 
 
 class LogicPainterConnector:
-    def __init__(self, painter: Painter, sim_logic: SimLogic, box_size=25):
+    def __init__(self, painter: Painter, sim_logic: SimLogic, box_size):
         self.box_size = box_size
         self.painter = painter
         self.sim_logic = sim_logic
         self.camera = Camera(pos_x=0, pos_y=0)
 
-    def draw_sim_map(self, line_width=4):
+    def draw_sim_map(self, line_width=2):
         box_size = self.box_size
         painter = self.painter
         sim_logic = self.sim_logic
@@ -51,7 +52,9 @@ class LogicPainterConnector:
 
     def input_mouse_input(self, mouse_input: [bool], mouse_pos: [float]):
         # print(mouse_input)
-        map_pos = vector_calculator.rescale_pos(mouse_pos, scale=1 / self.box_size)
+        print(mouse_pos)
+        game_logic_pos = [mouse_pos[0] + self.camera.pos_x, mouse_pos[1] + self.camera.pos_y]
+        map_pos = vector_calculator.rescale_pos(game_logic_pos, scale=1 / self.box_size)
         self.sim_logic.input_mouse_input(mouse_input=mouse_input, map_pos=map_pos)
 
     def input_key(self, input_key):
@@ -66,5 +69,7 @@ class LogicPainterConnector:
         elif input_key == "d":
             self.camera.pos_x += 100
         print(self.camera.pos_x, self.camera.pos_y)
+        self.camera.pos_x = max(self.camera.pos_x, 0)
+        self.camera.pos_y = max(self.camera.pos_y, 0)
         if input_key == "l":
             self.sim_logic.save_map()

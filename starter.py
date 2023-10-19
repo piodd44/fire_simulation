@@ -11,12 +11,12 @@ WIDTH = 1020
 pygame.init()
 
 screen = pygame.display.set_mode((HEIGHT, WIDTH))
-BOX_SIZE = 25
+BOX_SIZE = 15
 clock = pygame.time.Clock()
 painter = Painter(screen=screen)
 event_listener = EventListener()
 sim_logic = SimLogic(map_size=[10, 10], box_size=BOX_SIZE)
-logic_painter_connector = LogicPainterConnector(painter=painter, sim_logic=sim_logic)
+logic_painter_connector = LogicPainterConnector(painter=painter, sim_logic=sim_logic, box_size=BOX_SIZE)
 
 
 def calculate_map_pos(pos_vector: [int]):
@@ -56,13 +56,11 @@ while True:
 
     inpute_list = event_listener.get_key_pressed()
 
-
-
     sim_logic.sim_iteration()
 
     for inpute_key in inpute_list:
         logic_painter_connector.input_key(input_key=inpute_key)
-        #sim_logic.make_action(inpute_key)
+        # sim_logic.make_action(inpute_key)
     pygame.display.flip()  # Refresh on-screen display
 
     clock.tick(60)  # wait until next frame (at 60 FPS)
